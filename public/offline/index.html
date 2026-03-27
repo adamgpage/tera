@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline | Tera</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container { text-align: center; max-width: 400px; }
+    h1 { font-size: 2.5rem; font-weight: 700; color: #14b8a6; margin-bottom: 1rem; }
+    p { color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem; }
+    button {
+      background: #14b8a6;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover { background: #0d9488; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tera</h1>
+    <p>You're currently offline. Tera needs an internet connection to connect you with helpers around the world.</p>
+    <p>Your pending requests and recent conversations are cached and will sync when you're back online.</p>
+    <button onclick="window.location.reload()">Try Again</button>
+  </div>
+</body>
+</html>

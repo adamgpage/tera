@@ -1,0 +1,42 @@
+{
+  "name": "tera",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "@daily-co/daily-js": "^0.89.1",
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.100.1",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.183.1",
+    "globe.gl": "^2.45.1",
+    "ical-generator": "^10.1.0",
+    "next": "^16.2.1",
+    "pg": "^8.20.0",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "resend": "^6.9.4",
+    "stream-chat": "^9.38.0",
+    "stream-chat-react": "^13.14.3",
+    "stripe": "^21.0.1",
+    "tailwindcss": "^4.2.2",
+    "three": "^0.183.2",
+    "typescript": "^6.0.2",
+    "typesense": "^3.0.4",
+    "web-push": "^3.6.7",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/web-push": "^3.6.4"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "Bash(npx supabase:*)",
+      "Bash(curl -s -X POST \"https://maordoqhfwvvqvrdamxo.supabase.co/rest/v1/rpc\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hb3Jkb3FoZnd2dnF2cmRhbXhvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDU0MTMxNCwiZXhwIjoyMDkwMTE3MzE0fQ.89sL8Nqn9RDVlS8uQ6u664Ci8I7ua8F9CcYAJdCr4ik\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hb3Jkb3FoZnd2dnF2cmRhbXhvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDU0MTMxNCwiZXhwIjoyMDkwMTE3MzE0fQ.89sL8Nqn9RDVlS8uQ6u664Ci8I7ua8F9CcYAJdCr4ik\" -H \"Content-Type: application/json\")",
+      "Bash(node /c/Users/Adam/Tera/scripts/run-migrations.mjs)",
+      "Bash(node -e \":*)",
+      "Bash(npx tsc:*)",
+      "Bash(grep -r Tables[ node_modules/@supabase/supabase-js/dist/module/index.d.ts)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(taskkill /f /im node.exe)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx kill-port:*)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(grep -l \"<=>\" supabase/migrations/*.sql)",
+      "Bash(npm list:*)",
+      "Bash(ls C:/Users/Adam/Tera/public/manifest* C:/Users/Adam/Tera/public/sw*)"
+    ]
+  }
+}

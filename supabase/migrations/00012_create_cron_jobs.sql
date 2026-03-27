@@ -1,0 +1,60 @@
+-- Note: pg_cron and pg_net must be enabled on the Supabase project.
+-- These jobs invoke Edge Functions via pg_net HTTP calls.
+-- The actual Edge Function URLs and service role key must be configured
+-- after the Supabase project is created.
+
+-- Placeholder: cascade-notification (every 5 minutes)
+-- Checks for timed-out pending match_attempts and advances to next helper
+-- select cron.schedule(
+--   'cascade-notification',
+--   '*/5 * * * *',
+--   $$
+--   select net.http_post(
+--     url := 'https://YOUR_PROJECT.supabase.co/functions/v1/cascade-notification',
+--     headers := jsonb_build_object(
+--       'Authorization', 'Bearer YOUR_SERVICE_ROLE_KEY',
+--       'Content-Type', 'application/json'
+--     ),
+--     body := '{}'::jsonb
+--   );
+--   $$
+-- );
+
+-- Placeholder: retry-unmatched (every hour)
+-- Re-runs matching for requests with status 'unmatched' or stale 'matching'
+-- select cron.schedule(
+--   'retry-unmatched',
+--   '0 * * * *',
+--   $$
+--   select net.http_post(
+--     url := 'https://YOUR_PROJECT.supabase.co/functions/v1/retry-unmatched',
+--     headers := jsonb_build_object(
+--       'Authorization', 'Bearer YOUR_SERVICE_ROLE_KEY',
+--       'Content-Type', 'application/json'
+--     ),
+--     body := '{}'::jsonb
+--   );
+--   $$
+-- );
+
+-- Placeholder: auto-close-conversations (daily at 03:00 UTC)
+-- Sends 27-day inactivity warning and closes at 30 days
+-- select cron.schedule(
+--   'auto-close-conversations',
+--   '0 3 * * *',
+--   $$
+--   select net.http_post(
+--     url := 'https://YOUR_PROJECT.supabase.co/functions/v1/auto-close-conversations',
+--     headers := jsonb_build_object(
+--       'Authorization', 'Bearer YOUR_SERVICE_ROLE_KEY',
+--       'Content-Type', 'application/json'
+--     ),
+--     body := '{}'::jsonb
+--   );
+--   $$
+-- );
+
+-- Note: Uncomment and configure these after Supabase project setup.
+-- Replace YOUR_PROJECT and YOUR_SERVICE_ROLE_KEY with actual values.
+-- These can also be configured via the Supabase dashboard under
+-- Database > Extensions > pg_cron.

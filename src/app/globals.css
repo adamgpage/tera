@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tera-50: #f0fdf4;
+  --color-tera-100: #dcfce7;
+  --color-tera-200: #bbf7d0;
+  --color-tera-300: #86efac;
+  --color-tera-400: #4ade80;
+  --color-tera-500: #22c55e;
+  --color-tera-600: #16a34a;
+  --color-tera-700: #15803d;
+  --color-tera-800: #166534;
+  --color-tera-900: #14532d;
+
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f9fafb;
+  --color-border: #e5e7eb;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+}
+
+/* RTL support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-tera-500);
+  outline-offset: 2px;
+}
