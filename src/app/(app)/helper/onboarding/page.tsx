@@ -19,7 +19,7 @@ type Step = "biography" | "generating" | "review" | "details" | "saving";
 export default function HelperOnboardingPage() {
   const router = useRouter();
   const supabase = createClient();
-  const { authUser, profile, refresh } = useUser();
+  const { authUser, profile, loading, refresh } = useUser();
 
   const [step, setStep] = useState<Step>("biography");
   const [error, setError] = useState<string | null>(null);
@@ -131,6 +131,15 @@ export default function HelperOnboardingPage() {
       );
       setStep("details");
     }
+  }
+
+  // Wait for user data to load before deciding
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
   }
 
   // Already a helper — redirect

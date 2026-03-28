@@ -29,7 +29,7 @@ interface HelperProfileData {
 export default function HelperProfilePage() {
   const router = useRouter();
   const supabase = createClient();
-  const { authUser, profile } = useUser();
+  const { authUser, profile, loading: userLoading } = useUser();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -137,6 +137,14 @@ export default function HelperProfilePage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  if (userLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
   }
 
   if (!profile?.is_helper) {
