@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { useUser } from "@/hooks/use-user";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { MatchInvitationCard } from "@/components/requests/match-invitation-card";
@@ -22,71 +20,23 @@ interface Invitation {
 }
 
 export default function InvitationsPage() {
-  const supabase = createClient();
-  const { authUser } = useUser();
-
   const [loading, setLoading] = useState(true);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
 
   const fetchInvitations = useCallback(async () => {
-    if (!authUser) return;
-
-    // Get helper profile ID
-    const { data: helperProfile } = await supabase
-      .from("helper_profiles")
-      .select("id")
-      .eq("user_id", authUser.id)
-      .single();
-
-    if (!helperProfile) {
+    try {
+      const res = await fetch("/api/helper/invitations");
+      if (res.ok) {
+        const data = await res.json();
+        setInvitations(data.invitations || []);
+      }
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const hpId = (helperProfile as Record<string, unknown>).id as string;
-
-    // Get pending match attempts for this helper
-    const { data: attempts } = await supabase
-      .from("match_attempts")
-      .select("id, request_id, match_score, rank")
-      .eq("helper_profile_id", hpId)
-      .eq("response", "pending")
-      .order("created_at", { ascending: false });
-
-    if (!attempts || attempts.length === 0) {
-      setInvitations([]);
-      setLoading(false);
-      return;
-    }
-
-    // Fetch request details for each attempt
-    const requestIds = (attempts as any[]).map((a) => a.request_id);
-    const { data: requests } = await supabase
-      .from("requests")
-      .select("id, parsed_summary, raw_text, expertise_tags, urgency, preferred_format")
-      .in("id", requestIds);
-
-    const requestMap = new Map(
-      (requests as any[] ?? []).map((r) => [r.id, r])
-    );
-
-    const mapped = (attempts as any[])
-      .map((a) => ({
-        id: a.id,
-        request_id: a.request_id,
-        match_score: a.match_score,
-        rank: a.rank,
-        request: requestMap.get(a.request_id),
-      }))
-      .filter((a) => a.request) as Invitation[];
-
-    setInvitations(mapped);
-    setLoading(false);
-  }, [authUser, supabase]);
+  }, []);
 
   useEffect(() => {
     fetchInvitations();
-    // Poll every 30s so new invitations appear without a manual refresh
     const interval = setInterval(fetchInvitations, 30_000);
     return () => clearInterval(interval);
   }, [fetchInvitations]);
