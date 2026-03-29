@@ -63,6 +63,9 @@ export function RegisterForm() {
         return;
       }
 
+      // Ensure public.users row exists (fallback if trigger didn't fire)
+      await fetch("/api/auth/complete-registration", { method: "POST" });
+
       // Check if email confirmation is required
       // If not (dev mode), redirect straight to dashboard
       const { data: { session } } = await supabase.auth.getSession();

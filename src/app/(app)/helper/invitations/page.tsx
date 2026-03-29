@@ -86,6 +86,9 @@ export default function InvitationsPage() {
 
   useEffect(() => {
     fetchInvitations();
+    // Poll every 30s so new invitations appear without a manual refresh
+    const interval = setInterval(fetchInvitations, 30_000);
+    return () => clearInterval(interval);
   }, [fetchInvitations]);
 
   if (loading) {
@@ -98,7 +101,15 @@ export default function InvitationsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold text-text-primary">Invitations</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-text-primary">Invitations</h1>
+        <button
+          onClick={fetchInvitations}
+          className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
 
       {invitations.length === 0 ? (
         <Card>
