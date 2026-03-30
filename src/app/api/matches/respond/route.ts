@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Helper responds to a match invitation (accept or decline).
  */
 export async function POST(request: NextRequest) {
+  // Verify identity with the user-auth client
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -18,8 +20,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "matchAttemptId and response (accepted/declined) required" }, { status: 400 });
   }
 
+  // Use admin client for all DB ops to avoid RLS chain issues
+  const admin = createAdminClient();
+
   // Get the match attempt and verify this helper owns it
-  const { data: attempt } = await supabase
+  const { data: attempt } = await admin
     .from("match_attempts")
     .select("*, helper_profiles!inner(user_id), requests!inner(asker_user_id, parsed_summary, preferred_format, status)")
     .eq("id", matchAttemptId)
@@ -42,7 +47,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Update the match attempt
-  await supabase
+  await admin
     .from("match_attempts")
     .update({
       response: matchResponse,
@@ -54,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Create conversation
     const format = req.preferred_format === "synchronous" ? "synchronous" : "asynchronous";
 
-    const { data: conversation } = await supabase
+    const { data: conversation } = await admin
       .from("conversations")
       .insert({
         request_id: a.request_id,
@@ -73,7 +78,7 @@ export async function POST(request: NextRequest) {
     const conversationId = (conversation as Record<string, unknown>).id as string;
 
     // Update request status
-    await supabase
+    await admin
       .from("requests")
       .update({
         status: "in_progress",
@@ -82,7 +87,7 @@ export async function POST(request: NextRequest) {
       .eq("id", a.request_id);
 
     // Notify asker
-    await supabase.from("notifications").insert({
+    await admin.from("notifications").insert({
       user_id: req.asker_user_id,
       type: "match_confirmed",
       content: "A helper has accepted your request! Start your conversation now.",
@@ -94,7 +99,7 @@ export async function POST(request: NextRequest) {
   } else {
     // Declined — notify the next helper in the cascade
     // Find the next pending match attempt for this request
-    const { data: nextAttempt } = await supabase
+    const { data: nextAttempt } = await admin
       .from("match_attempts")
       .select("id, helper_profile_id, helper_profiles!inner(user_id)")
       .eq("request_id", a.request_id)
@@ -107,7 +112,7 @@ export async function POST(request: NextRequest) {
       const next = nextAttempt as Record<string, unknown>;
       const nextHelper = next.helper_profiles as Record<string, unknown>;
 
-      await supabase.from("notifications").insert({
+      await admin.from("notifications").insert({
         user_id: nextHelper.user_id,
         type: "match_invitation",
         content: `New request matching your expertise: ${(req.parsed_summary as string || "").slice(0, 100)}...`,
@@ -116,7 +121,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Notify asker about cascade
-      await supabase.from("notifications").insert({
+      await admin.from("notifications").insert({
         user_id: req.asker_user_id,
         type: "match_cascading",
         content: "The first helper wasn't available. We've notified the next best match.",
@@ -125,12 +130,12 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // No more candidates — mark unmatched
-      await supabase
+      await admin
         .from("requests")
         .update({ status: "unmatched" } as Record<string, unknown>)
         .eq("id", a.request_id);
 
-      await supabase.from("notifications").insert({
+      await admin.from("notifications").insert({
         user_id: req.asker_user_id,
         type: "match_exhausted",
         content: "We haven't found a match yet. Your request is visible to helpers who can browse and volunteer.",
